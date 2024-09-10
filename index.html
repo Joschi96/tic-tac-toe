@@ -10,8 +10,29 @@
     
 </head>
 <body>
-    <dialog>
-        Choose your 
+    <dialog id="startDialog">
+        <h1>Player 1, choose your Symbol:</h1>
+        <div class="symbol-container">
+            <p>X</p>
+            <p>O</p>
+        </div>
+        <p>Remember: X goes first!</p>
+        <form class="form-names">
+            <ul>
+                <li>
+                    <label for="player1">Name player 1:</label>
+                    <input type="text" name="name_player1" id="player1">
+                </li>
+                <li>
+                    <label for="player2">Name player 2:</label>
+                    <input type="text" name="name_player2" id="player2">
+                </li>
+            </ul>
+            <div class="form-buttons">
+                <button type="button" id="cancelButton">Cancel</button>
+                <button type="submit">Start</button>
+            </div>
+        </form>
     </dialog>
     <header>
         <h1>Tic Tac Toe</h1>
@@ -32,12 +53,13 @@
             <!-- Cells will be dynamically created and filled by JavaScript -->
         </div>
         <button type="button">Restart</button>
+        <button type="button">Change players</button>
     </div>
     <footer>
         <p><img src="images/github.svg" alt="GitHub logo"><a href="">Joschi96</a> | <a href="">tic-tac-toe</a></p>
     </footer>
 
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

@@ -190,7 +190,30 @@ const gameController =(() => {
 
 const displayController =(() => {
   const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
+  const restartButton = document.querySelector('.game-container button:nth-of-type(1)'); // Select the "Restart" button
+  const changePlayersButton = document.querySelector('.game-container button:nth-of-type(2)'); // Select the "Change players" button
+  const startDialog = document.getElementById('startDialog'); // Select the dialog element
+
   let currentPlayer = gameController.getPlayer1();
+
+  
+
+  /**
+     * Handle button clicks for "Restart" and "Change players"
+     */
+  const _handleButtonClick = (event) => {
+    if (event.target === restartButton) {
+        // Handle "Restart" button click
+        Gameboard.clear(); // Clear the gameboard array
+        renderBoard(Gameboard); // Re-render the gameboard visually
+    } else if (event.target === changePlayersButton) {
+        // Handle "Change players" button click
+        startDialog.showModal(); // Show the dialog for changing players
+    }
+  };
+  // Add event listeners for buttons
+  restartButton.addEventListener('click', _handleButtonClick);
+  changePlayersButton.addEventListener('click', _handleButtonClick);
 
   /**
    * Render the gameboard to the webpage
@@ -254,7 +277,6 @@ const displayController =(() => {
     _switchPlayer();
 
   };
-
 
   return {
     renderBoard,
