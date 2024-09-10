@@ -25,10 +25,24 @@ const Gameboard = (() => {
       }
     }
 
+    /**
+     * Prints the gameboard in the console
+     */
+    const getBoard = () => {
+      let displayBoard = '';
+      for (let i = 0; i < _board.length; i++) {
+          displayBoard += _board[i] ? _board[i] : '_'; // Show symbol or underscore if empty
+          if ((i + 1) % 3 === 0) displayBoard += '\n'; // Add newline after every 3 cells
+          else displayBoard += ' '; // Add space between symbols
+      }
+      console.log(displayBoard);
+    };
+
     return{
       getCell,
       setSymbol,
-      clear
+      clear,
+      getBoard
     };
 })();
 
