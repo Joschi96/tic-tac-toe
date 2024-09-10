@@ -1,4 +1,8 @@
 # Tic Tac Toe
-A Tic Tac Toe game that you can play in your browser.
-Created while doing The Odin Project
+A Tic Tac Toe game that you can play in your browser.\n
+Created while doing The Odin Project.\n
+\n
+This project aims to utilize the recently learned methods in JS,\n including Factory Functions and Module Patterns, as well as the concept of conclusion.\n
+The goal is to have as little global code as possible.
+
 
