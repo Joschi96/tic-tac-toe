@@ -14,3 +14,7 @@
     border: 1px solid #333;
     cursor: pointer;
 }
+
+footer img{
+    height: 40px;
+}

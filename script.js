@@ -206,7 +206,7 @@ const displayController =(() => {
         cell.textContent = board.getCell(i) ? board.getCell(i) : ''; // Display 'X', 'O', or empty
         
         // Add click event listener for each cell
-        cell.addEventListener('click', () => handleCellClick(i, board));
+        cell.addEventListener('click', () => _handleCellClick(i, board));
 
         gameboardElement.appendChild(cell); // Append each cell to the gameboard container
     }
@@ -217,7 +217,7 @@ const displayController =(() => {
    * @param {number} index - The index of the cell clicked
    * @param {object} board - The Gameboard object
    */
-  const handleCellClick = (index, board) => {
+  const _handleCellClick = (index, board) => {
     // If the cell is already occupied, do nothing
     if (board.getCell(index)) {
       return;
@@ -242,16 +242,16 @@ const displayController =(() => {
       renderBoard(board); // Re-render the cleared board
       return;
     }
-    
+
     /**
    * Switch the current player
    */
-    const switchPlayer = () => {
+    const _switchPlayer = () => {
     currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
     };
 
     // Switch current player
-    switchPlayer();
+    _switchPlayer();
 
   };
 
