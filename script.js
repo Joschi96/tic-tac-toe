@@ -187,3 +187,82 @@ const gameController =(() => {
     changeSign,
   }
 })();
+
+const displayController =(() => {
+  const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
+  let currentPlayer = gameController.getPlayer1();
+
+  /**
+   * Render the gameboard to the webpage
+   */
+  const renderBoard = (board) => {
+    // Clear the previous board
+    gameboardElement.innerHTML = '';
+
+    // Iterate through the gameboard array and create cells
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div'); // Create a new div for each cell
+        cell.classList.add('cell'); // Add the 'cell' class for styling
+        cell.textContent = board.getCell(i) ? board.getCell(i) : ''; // Display 'X', 'O', or empty
+        
+        // Add click event listener for each cell
+        cell.addEventListener('click', () => handleCellClick(i, board));
+
+        gameboardElement.appendChild(cell); // Append each cell to the gameboard container
+    }
+  };
+
+  /**
+   * Handle click events on the cells
+   * @param {number} index - The index of the cell clicked
+   * @param {object} board - The Gameboard object
+   */
+  const handleCellClick = (index, board) => {
+    // If the cell is already occupied, do nothing
+    if (board.getCell(index)) {
+      return;
+    }
+
+    // Set players symbol on clicked cell
+    board.setSymbol(index, currentPlayer);
+
+    // Render the updated board
+    renderBoard(board);
+
+    // Check for win or draw
+    if(gameController.checkForWin(board)) {
+      alert(`${currentPlayer.getSign()} wins!`);
+      board.clear(); // Clear the board after a win
+      renderBoard(board); // Re-render the cleared board
+      return;
+    }
+    if (gameController.checkForDraw(board)) {
+      alert("It's a draw!");
+      board.clear(); // Clear the board after a draw
+      renderBoard(board); // Re-render the cleared board
+      return;
+    }
+    
+    /**
+   * Switch the current player
+   */
+    const switchPlayer = () => {
+    currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
+    };
+
+    // Switch current player
+    switchPlayer();
+
+  };
+
+
+  return {
+    renderBoard,
+  }
+})();
+
+// Initialize the game by rendering the initial empty board
+document.addEventListener('DOMContentLoaded', () => {
+  Gameboard.clear(); // Clear the board to start fresh
+  displayController.renderBoard(Gameboard); // Render the initial empty board
+});
