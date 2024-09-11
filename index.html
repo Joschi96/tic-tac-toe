@@ -10,29 +10,29 @@
     
 </head>
 <body>
-    <dialog id="startDialog">
-        <h1>Player 1, choose your Symbol:</h1>
-        <div class="symbol-container">
+    <dialog id="start-dialog">
+        <div class="dialog-container">
+            <h1>Who is playing?</h1>
             <p>X</p>
             <p>O</p>
+            
+            <form id="form-names">
+                <ul>
+                    <li>
+                        <label for="player1">Name player 1:</label>
+                        <input type="text" name="name_player1" id="player1">
+                    </li>
+                    <li>
+                        <label for="player2">Name player 2:</label>
+                        <input type="text" name="name_player2" id="player2">
+                    </li>
+                </ul><p>Remember: X goes first!</p>
+                <div class="form-buttons">
+                    <button type="button" id="cancel-button">Cancel</button>
+                    <button type="submit">Start</button>
+                </div>
+            </form>
         </div>
-        <p>Remember: X goes first!</p>
-        <form class="form-names">
-            <ul>
-                <li>
-                    <label for="player1">Name player 1:</label>
-                    <input type="text" name="name_player1" id="player1">
-                </li>
-                <li>
-                    <label for="player2">Name player 2:</label>
-                    <input type="text" name="name_player2" id="player2">
-                </li>
-            </ul>
-            <div class="form-buttons">
-                <button type="button" id="cancelButton">Cancel</button>
-                <button type="submit">Start</button>
-            </div>
-        </form>
     </dialog>
     <header>
         <h1>Tic Tac Toe</h1>
@@ -49,6 +49,7 @@
         </p>
     </header>
     <div class="game-container">
+        <div class="game-header"></div>
         <div class="gameboard">
             <!-- Cells will be dynamically created and filled by JavaScript -->
         </div>

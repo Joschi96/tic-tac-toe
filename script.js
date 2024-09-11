@@ -192,15 +192,22 @@ const displayController =(() => {
   const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
   const restartButton = document.querySelector('.game-container button:nth-of-type(1)'); // Select the "Restart" button
   const changePlayersButton = document.querySelector('.game-container button:nth-of-type(2)'); // Select the "Change players" button
-  const startDialog = document.getElementById('startDialog'); // Select the dialog element
+  const startDialog = document.getElementById('start-dialog'); // Select the dialog element
+  const cancelButton = document.querySelector('#cancel-button'); // Select dialog cancel button
+  const formElement = document.querySelector('#form-names'); // Select submit button in form element
+  const gameHeader = document.querySelector('.game-header'); // Select updating game header
+  // const xSymbol = document.querySelector('.symbol-container p:nth-of-type(1)');
+  // const oSymbol = document.querySelector('.symbol-container p:nth-of-type(2)');
 
   let currentPlayer = gameController.getPlayer1();
+  let player1Name = 'Player 1'; // Default player names
+  let player2Name = 'Player 2';
 
   
 
   /**
-     * Handle button clicks for "Restart" and "Change players"
-     */
+    * Handle button clicks for "Restart" and "Change players" and dialog button "Cancel"
+    */
   const _handleButtonClick = (event) => {
     if (event.target === restartButton) {
         // Handle "Restart" button click
@@ -209,11 +216,40 @@ const displayController =(() => {
     } else if (event.target === changePlayersButton) {
         // Handle "Change players" button click
         startDialog.showModal(); // Show the dialog for changing players
+    } else if (event.target === cancelButton) {
+        // Handle "Cancel" button click
+        startDialog.close(); // Close the dialog for changing players
     }
   };
+
+  const _handleSubmit = (event) =>{
+    event.preventDefault(); // Prevent default form submission
+
+    //Retrieve form values
+    const p1Name = document.getElementById('player1').value || player1Name;
+    const p2Name = document.getElementById('player2').value || player2Name;
+
+    //Update game header with player names
+    updateGameHeader(p1Name, p2Name);
+
+    Gameboard.clear(); // clear gameboard array
+    renderBoard(Gameboard); // Re-render the gameboard visually
+
+    startDialog.close();
+  };
+
   // Add event listeners for buttons
   restartButton.addEventListener('click', _handleButtonClick);
   changePlayersButton.addEventListener('click', _handleButtonClick);
+  cancelButton.addEventListener('click', _handleButtonClick);
+  formElement.addEventListener('submit', _handleSubmit);
+
+  /**
+   * Update the game header to display player names
+   */
+  const updateGameHeader = (name1, name2) => {
+    gameHeader.textContent = `${name1} VS ${name2}`; // Set the game header text
+  };
 
   /**
    * Render the gameboard to the webpage
@@ -233,6 +269,7 @@ const displayController =(() => {
 
         gameboardElement.appendChild(cell); // Append each cell to the gameboard container
     }
+
   };
 
   /**
@@ -278,8 +315,14 @@ const displayController =(() => {
 
   };
 
+  const showStartDialog = () => {
+    startDialog.showModal();
+  };
+
   return {
     renderBoard,
+    updateGameHeader,
+    showStartDialog,
   }
 })();
 
@@ -287,4 +330,8 @@ const displayController =(() => {
 document.addEventListener('DOMContentLoaded', () => {
   Gameboard.clear(); // Clear the board to start fresh
   displayController.renderBoard(Gameboard); // Render the initial empty board
+  displayController.updateGameHeader('Player 1', 'Player 2'); // Render automatically updating header
+
+  // Show dialog on page load
+  //displayController.showStartDialog();
 });
