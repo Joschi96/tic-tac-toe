@@ -190,12 +190,12 @@ const gameController =(() => {
 
 const displayController =(() => {
   const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
-  const restartButton = document.querySelector('.game-container button:nth-of-type(1)'); // Select the "Restart" button
-  const changePlayersButton = document.querySelector('.game-container button:nth-of-type(2)'); // Select the "Change players" button
+  const restartButton = document.querySelector('.game-section button:nth-of-type(1)'); // Select the "Restart" button
+  const changePlayersButton = document.querySelector('.game-section button:nth-of-type(2)'); // Select the "Change players" button
   const startDialog = document.getElementById('start-dialog'); // Select the dialog element
   const cancelButton = document.querySelector('#cancel-button'); // Select dialog cancel button
   const formElement = document.querySelector('#form-names'); // Select submit button in form element
-  const gameHeader = document.querySelector('.game-header'); // Select updating game header
+  const gameTitle = document.querySelector('.game-title'); // Select updating game header
   // const xSymbol = document.querySelector('.symbol-container p:nth-of-type(1)');
   // const oSymbol = document.querySelector('.symbol-container p:nth-of-type(2)');
 
@@ -230,7 +230,7 @@ const displayController =(() => {
     const p2Name = document.getElementById('player2').value || player2Name;
 
     //Update game header with player names
-    updateGameHeader(p1Name, p2Name);
+    updateGameTitle(p1Name, p2Name);
 
     Gameboard.clear(); // clear gameboard array
     renderBoard(Gameboard); // Re-render the gameboard visually
@@ -247,8 +247,8 @@ const displayController =(() => {
   /**
    * Update the game header to display player names
    */
-  const updateGameHeader = (name1, name2) => {
-    gameHeader.textContent = `${name1} VS ${name2}`; // Set the game header text
+  const updateGameTitle = (name1, name2) => {
+    gameTitle.textContent = `${name1} VS ${name2}`; // Set the game header text
   };
 
   /**
@@ -263,10 +263,10 @@ const displayController =(() => {
         const cell = document.createElement('div'); // Create a new div for each cell
         cell.classList.add('cell'); // Add the 'cell' class for styling
         cell.textContent = board.getCell(i) ? board.getCell(i) : ''; // Display 'X', 'O', or empty
-        
+        cell.dataset.index = i;
+
         // Add click event listener for each cell
         cell.addEventListener('click', () => _handleCellClick(i, board));
-
         gameboardElement.appendChild(cell); // Append each cell to the gameboard container
     }
 
@@ -286,33 +286,42 @@ const displayController =(() => {
     // Set players symbol on clicked cell
     board.setSymbol(index, currentPlayer);
 
+    // Add class to the cell based on the current player's symbol
+    const cellElement = document.querySelector(`.cell[data-index="${index}"]`);
+    if (currentPlayer === gameController.getPlayer1()) {
+      cellElement.classList.add('player-x');
+    } else {
+      cellElement.classList.add('player-o');
+    }
+
+    // Update the cell's text content
+    cellElement.textContent = currentPlayer.getSign();
+
     // Render the updated board
-    renderBoard(board);
+    // renderBoard(board);
 
     // Check for win or draw
     if(gameController.checkForWin(board)) {
-      alert(`${currentPlayer.getSign()} wins!`);
-      board.clear(); // Clear the board after a win
-      renderBoard(board); // Re-render the cleared board
+      setTimeout(() => {
+        alert(`${currentPlayer.getSign()} wins!`);
+        board.clear(); // Clear the board after a win
+        renderBoard(board); // Re-render the cleared board
+      }, 100);
       return;
     }
     if (gameController.checkForDraw(board)) {
-      alert("It's a draw!");
-      board.clear(); // Clear the board after a draw
-      renderBoard(board); // Re-render the cleared board
+      setTimeout(() => {
+        alert("It's a draw!");
+        board.clear(); // Clear the board after a draw
+        renderBoard(board); // Re-render the cleared board
+      }, 100);
       return;
     }
 
     /**
    * Switch the current player
    */
-    const _switchPlayer = () => {
     currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
-    };
-
-    // Switch current player
-    _switchPlayer();
-
   };
 
   const showStartDialog = () => {
@@ -321,7 +330,7 @@ const displayController =(() => {
 
   return {
     renderBoard,
-    updateGameHeader,
+    updateGameTitle,
     showStartDialog,
   }
 })();
@@ -330,7 +339,7 @@ const displayController =(() => {
 document.addEventListener('DOMContentLoaded', () => {
   Gameboard.clear(); // Clear the board to start fresh
   displayController.renderBoard(Gameboard); // Render the initial empty board
-  displayController.updateGameHeader('Player 1', 'Player 2'); // Render automatically updating header
+  displayController.updateGameTitle('Player 1', 'Player 2'); // Render automatically updating header
 
   // Show dialog on page load
   //displayController.showStartDialog();

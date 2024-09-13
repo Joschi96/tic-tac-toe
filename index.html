@@ -45,16 +45,26 @@
                 <em>Closure</em>.
             </p>
             <p>
-                The code can is available on <a href="">my GitHub</a>.
+                The code is available on <a href="">my GitHub</a>.
             </p>
         </header>
-        <div class="game-container">
-            <div class="game-header"></div>
+        <div class="game-section">
+            <div class="X">
+                X
+                <div class="win-counter" id="x-win-counter">Wins: 0</div>
+            </div>
+            <div class="game-title"></div>
+            <div class="O">
+                O
+                <div class="win-counter" id="o-win-counter">Wins: 0</div>
+            </div>
             <div class="gameboard">
                 <!-- Cells will be dynamically created and filled by JavaScript -->
             </div>
-            <button type="button">Restart</button>
-            <button type="button">Change players</button>
+            <div class="buttons">
+                <button type="button">Restart</button>
+                <button type="button">Change players</button>
+            </div>
         </div>
         <footer>
             <p><img src="images/github.svg" alt="GitHub logo"><a href="">Joschi96</a> | <a href="">tic-tac-toe</a></p>
