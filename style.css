@@ -91,10 +91,12 @@ header * {
 
 .X {
     color: var(--primary-color);
+    filter: drop-shadow(0 0 2px var(--primary-color));
 }
 
 .O {
     color: var(--quaternary-color);
+    filter: drop-shadow(0 0 2px var(--quaternary-color));
 }
 
 .game-section .game-title {
@@ -120,7 +122,8 @@ header * {
     gap: 2rem;
 }
 
-.buttons button {
+/* Button styling */
+.buttons button, .dialog-container .form-buttons button {
     padding: 0.5rem 1rem;
     flex-grow: 1;
     flex-shrink: 1;
@@ -136,7 +139,7 @@ header * {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.555);
 }
 
-.buttons button:hover {
+.buttons button:hover, .dialog-container .form-buttons button:hover {
     background-color: #978d9559;
     color: var(--primary-color);
 }
@@ -148,6 +151,7 @@ header * {
     border: 1px solid #333;
     grid-row: 3;
     margin-bottom: 2rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
 }
 
 .cell {
@@ -196,16 +200,33 @@ footer p {
 }
 
 /* Dialog container styling */
+#start-dialog{
+    background-color: rgba(255, 255, 255, 0.0);
+    border: none;
+}
+#start-dialog::backdrop{
+    backdrop-filter: blur(4px);
+}
 .dialog-container {
     display: grid;
     grid-template-columns: repeat(2, minmax(200px, 250px));
     grid-template-rows: auto auto auto auto;
     column-gap: 10px;
     row-gap: 10px;
+    padding: 1.5rem;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(132, 94, 194, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .dialog-container h1 {
     grid-column: 1 / 3;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 1rem;
 }
 
 .dialog-container .X, .dialog-container .O {
@@ -236,12 +257,15 @@ footer p {
     grid-column: 1;
     grid-row: 3;
     text-align: left;
+    color: #333;
+    font-size: 1rem;
 }
 
 .dialog-container .form-buttons {
     grid-column: 1 / 3;
     display: flex;
     justify-content: space-between;
+    margin-top: 1rem;
 }
 
 #form-names {
@@ -255,6 +279,35 @@ footer p {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#form-names .player-input label {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+#player1{
+    color: var(--primary-color);
+}
+#player2{
+    color: var(--quaternary-color);
+}
+
+#form-names .player-input input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+#form-names .player-input input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(132, 94, 194, 0.5);
+}
+#form-names .player-input input::placeholder {
+    color: var(--quinary-color);
+    opacity: 0.7;
 }
 
 /* General link styles */
