@@ -196,6 +196,8 @@ const displayController =(() => {
   const cancelButton = document.querySelector('#cancel-button'); // Select dialog cancel button
   const formElement = document.querySelector('#form-names'); // Select submit button in form element
   const gameTitle = document.querySelector('.game-title'); // Select updating game header
+  const player1Title = document.querySelector('.player1'); // Select player 1 title
+  const player2Title = document.querySelector('.player2'); // Select player 2 title
   // const xSymbol = document.querySelector('.symbol-container p:nth-of-type(1)');
   // const oSymbol = document.querySelector('.symbol-container p:nth-of-type(2)');
 
@@ -213,6 +215,9 @@ const displayController =(() => {
         // Handle "Restart" button click
         Gameboard.clear(); // Clear the gameboard array
         renderBoard(Gameboard); // Re-render the gameboard visually
+        // reset win counters
+        document.getElementById('x-win-counter').textContent = '0'; 
+        document.getElementById('o-win-counter').textContent = '0';
     } else if (event.target === changePlayersButton) {
         // Handle "Change players" button click
         startDialog.showModal(); // Show the dialog for changing players
@@ -248,7 +253,8 @@ const displayController =(() => {
    * Update the game header to display player names
    */
   const updateGameTitle = (name1, name2) => {
-    gameTitle.textContent = `${name1} VS ${name2}`; // Set the game header text
+    player1Title.textContent = name1; // Set player 1 name
+    player2Title.textContent = name2; // Set player 2 name
   };
 
   /**
@@ -303,7 +309,12 @@ const displayController =(() => {
     // Check for win or draw
     if(gameController.checkForWin(board)) {
       setTimeout(() => {
-        alert(`${currentPlayer.getSign()} wins!`);
+        // Update the win counter
+        const playerSign = currentPlayer.getSign().toLowerCase();
+        const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
+        let winCount = parseInt(winCounterDiv.textContent, 10);
+        winCounterDiv.textContent = ++winCount;
+
         board.clear(); // Clear the board after a win
         renderBoard(board); // Re-render the cleared board
       }, 100);

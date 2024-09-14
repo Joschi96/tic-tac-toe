@@ -14,8 +14,8 @@
         <dialog id="start-dialog">
             <div class="dialog-container">
                 <h1>Who is playing?</h1>
-                <div class="symbol">X</div>
-                <div class="symbol">O</div>
+                <div class="X">X</div>
+                <div class="O">O</div>
         
                 <form id="form-names">
                     <div class="player-input">
@@ -54,12 +54,20 @@
         <div class="game-section">
             <div class="X">
                 X
-                <div class="win-counter" id="x-win-counter">Wins: 0</div>
+                <div class="win-counter">Wins: 
+                    <div id="x-win-counter">0</div>
+                </div>
             </div>
-            <div class="game-title"></div>
+            <div class="game-title">
+                <div class="player1"></div>
+                <div class="vs">VS</div>
+                <div class="player2"></div>
+            </div>
             <div class="O">
                 O
-                <div class="win-counter" id="o-win-counter">Wins: 0</div>
+                <div class="win-counter">Wins: 
+                    <div id="o-win-counter">0</div>
+                </div>
             </div>
             <div class="gameboard">
                 <!-- Cells will be dynamically created and filled by JavaScript -->
