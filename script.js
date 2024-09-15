@@ -190,16 +190,17 @@ const gameController =(() => {
 
 const displayController =(() => {
   const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
-  const restartButton = document.querySelector('.game-section button:nth-of-type(1)'); // Select the "Restart" button
-  const changePlayersButton = document.querySelector('.game-section button:nth-of-type(2)'); // Select the "Change players" button
+  const restartButton = document.getElementById('restart-button'); // Select the "Restart" button
+  const changePlayersButton = document.getElementById('change-players-button'); // Select the "Change players" button
   const startDialog = document.getElementById('start-dialog'); // Select the dialog element
   const cancelButton = document.querySelector('#cancel-button'); // Select dialog cancel button
   const formElement = document.querySelector('#form-names'); // Select submit button in form element
   const gameTitle = document.querySelector('.game-title'); // Select updating game header
   const player1Title = document.querySelector('.player1'); // Select player 1 title
   const player2Title = document.querySelector('.player2'); // Select player 2 title
-  // const xSymbol = document.querySelector('.symbol-container p:nth-of-type(1)');
-  // const oSymbol = document.querySelector('.symbol-container p:nth-of-type(2)');
+  const winnerDisplay = document.getElementById('winner-display');
+  const board = document.querySelector('.gameboard');
+  const nextRoundButton = document.getElementById('next-round-button');
 
   let currentPlayer = gameController.getPlayer1();
   let player1Name = 'Player 1'; // Default player names
@@ -275,8 +276,30 @@ const displayController =(() => {
         cell.addEventListener('click', () => _handleCellClick(i, board));
         gameboardElement.appendChild(cell); // Append each cell to the gameboard container
     }
-
   };
+
+  const displayWinner = (winner) => {
+    winnerDisplay.textContent = `Winner: ${winner}`;
+    board.classList.add('blurred');
+    nextRoundButton.classList.remove('hidden');
+  };
+
+  const displayDraw = () => {
+    winnerDisplay.textContent = "It's a draw!";
+    board.classList.add('blurred');
+    nextRoundButton.classList.remove('hidden');
+  };
+
+  const startNextRound = () => {
+    winnerDisplay.textContent = '';
+    board.classList.remove('blurred');
+    nextRoundButton.classList.add('hidden');
+    Gameboard.clear(); // Clear the board after a win
+    renderBoard(Gameboard); // Re-render the cleared board
+    currentPlayer = gameController.getPlayer1(); // Reset the current player to player 1
+  };
+
+  nextRoundButton.addEventListener('click', startNextRound);
 
   /**
    * Handle click events on the cells
@@ -314,21 +337,21 @@ const displayController =(() => {
         const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
         let winCount = parseInt(winCounterDiv.textContent, 10);
         winCounterDiv.textContent = ++winCount;
-
-        board.clear(); // Clear the board after a win
-        renderBoard(board); // Re-render the cleared board
+        displayWinner(currentPlayer.getSign());
+        //board.clear(); // Clear the board after a win
+        //renderBoard(board); // Re-render the cleared board
       }, 100);
       return;
     }
     if (gameController.checkForDraw(board)) {
       setTimeout(() => {
-        alert("It's a draw!");
-        board.clear(); // Clear the board after a draw
-        renderBoard(board); // Re-render the cleared board
+        //alert("It's a draw!");
+        //board.clear(); // Clear the board after a draw
+        //renderBoard(board); // Re-render the cleared board
+        displayDraw();
       }, 100);
       return;
     }
-
     /**
    * Switch the current player
    */
@@ -340,6 +363,7 @@ const displayController =(() => {
   };
 
   return {
+    displayWinner,
     renderBoard,
     updateGameTitle,
     showStartDialog,

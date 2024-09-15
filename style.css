@@ -339,3 +339,22 @@ a {
 .vs {
     color: #333;
 }
+
+.gameboard.blurred {
+    filter: blur(5px);
+}
+  
+#next-round-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+  
+.hidden {
+    display: none;
+}
