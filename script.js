@@ -234,27 +234,43 @@ const displayController = (() => {
   // Add event listener for the next round button
   nextRoundButton.addEventListener('click', startNextRound);
 
-  // Method to handle cell click events
   const _handleCellClick = (index, board) => {
-      if (board.getCell(index)) return; // Do nothing if cell is occupied
-      board.setSymbol(index, currentPlayer);
-      document.querySelector(`.cell[data-index="${index}"]`).textContent = currentPlayer.getSign();
-      if (gameController.checkForWin(board)) {
-          setTimeout(() => {
-              const playerSign = currentPlayer.getSign().toLowerCase();
-              const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
-              winCounterDiv.textContent = parseInt(winCounterDiv.textContent) + 1;
-              displayWinner(currentPlayer.getSign());
-          }, 100);
-          return;
-      }
-      if (gameController.checkForDraw(board)) {
-          setTimeout(displayDraw, 100);
-          return;
-      }
-      // Switch current player
-      currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
-  };
+        // If the cell is already occupied, do nothing
+        if (board.getCell(index)) return;
+
+        // Set player's symbol on the clicked cell
+        board.setSymbol(index, currentPlayer);
+
+        // Get the cell element
+        const cellElement = document.querySelector(`.cell[data-index="${index}"]`);
+        cellElement.textContent = currentPlayer.getSign(); // Set the text content to the player's symbol
+
+        // Apply the class based on the current player's sign
+        if (currentPlayer.getSign() === 'X') {
+            cellElement.classList.add('player-x');
+        } else {
+            cellElement.classList.add('player-o');
+        }
+
+        // Check for win or draw
+        if (gameController.checkForWin(board)) {
+            setTimeout(() => {
+                const playerSign = currentPlayer.getSign().toLowerCase();
+                const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
+                winCounterDiv.textContent = parseInt(winCounterDiv.textContent) + 1;
+                displayWinner(currentPlayer.getSign());
+            }, 100);
+            return;
+        }
+
+        if (gameController.checkForDraw(board)) {
+            setTimeout(displayDraw, 100);
+            return;
+        }
+
+        // Switch the current player
+        currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
+    };
 
   return {
       displayWinner,
