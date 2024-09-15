@@ -206,7 +206,20 @@ const displayController =(() => {
   let player1Name = 'Player 1'; // Default player names
   let player2Name = 'Player 2';
 
-  
+  const displayWinner = (winner) => {
+    winnerDisplay.classList.remove('hidden');
+    winnerDisplay.textContent = `Winner: ${winner}`;
+    board.classList.add('blurred');
+    board.classList.add('disabled'); // Disable pointer events
+    nextRoundButton.classList.remove('hidden');
+  };
+
+  const displayDraw = () => {
+    winnerDisplay.textContent = "It's a draw!";
+    winnerDisplay.classList.remove('hidden');
+    board.classList.add('blurred');
+    nextRoundButton.classList.remove('hidden');
+  };
 
   /**
     * Handle button clicks for "Restart" and "Change players" and dialog button "Cancel"
@@ -262,8 +275,15 @@ const displayController =(() => {
    * Render the gameboard to the webpage
    */
   const renderBoard = (board) => {
-    // Clear the previous board
-    gameboardElement.innerHTML = '';
+    const gameboardElement = document.querySelector('.gameboard');
+    gameboardElement.innerHTML = '';// Clear the previous board
+
+    // Re-add the winner-display div
+    const winnerDisplay = document.createElement('div');
+    winnerDisplay.id = 'winner-display';
+    winnerDisplay.classList.add('hidden');
+    gameboardElement.appendChild(winnerDisplay);
+
 
     // Iterate through the gameboard array and create cells
     for (let i = 0; i < 9; i++) {
@@ -278,21 +298,13 @@ const displayController =(() => {
     }
   };
 
-  const displayWinner = (winner) => {
-    winnerDisplay.textContent = `Winner: ${winner}`;
-    board.classList.add('blurred');
-    nextRoundButton.classList.remove('hidden');
-  };
-
-  const displayDraw = () => {
-    winnerDisplay.textContent = "It's a draw!";
-    board.classList.add('blurred');
-    nextRoundButton.classList.remove('hidden');
-  };
+  
 
   const startNextRound = () => {
     winnerDisplay.textContent = '';
+    winnerDisplay.classList.add('hidden');
     board.classList.remove('blurred');
+    board.classList.remove('disabled'); // Enable pointer events
     nextRoundButton.classList.add('hidden');
     Gameboard.clear(); // Clear the board after a win
     renderBoard(Gameboard); // Re-render the cleared board
@@ -364,6 +376,7 @@ const displayController =(() => {
 
   return {
     displayWinner,
+    displayDraw,
     renderBoard,
     updateGameTitle,
     showStartDialog,

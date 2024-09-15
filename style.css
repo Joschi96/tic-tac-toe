@@ -13,6 +13,11 @@ ul {
     padding: 0;
 }
 
+/* Disable pointer events on disabled elements */
+.disabled {
+    pointer-events: none;
+  }
+
 /* Set basic element styling */
 body {
     font-family: 'Roboto', sans-serif;
@@ -146,6 +151,7 @@ header * {
 
 /* Gameboard styling */
 .gameboard {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(3, 100px);
     border: 1px solid #333;
@@ -343,6 +349,19 @@ a {
 .gameboard.blurred {
     filter: blur(5px);
 }
+
+#winner-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: Add a background color */
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 10; /* Ensure it sits on top of other elements */
+}
   
 #next-round-button {
     position: absolute;
@@ -353,6 +372,7 @@ a {
     border: none;
     background: none;
     cursor: pointer;
+    z-index: 10; /* Ensure it sits on top of other elements */
 }
   
 .hidden {
