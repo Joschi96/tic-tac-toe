@@ -1,183 +1,124 @@
 /**
- * This module stores the gameboard information
+ * Module for storing gameboard information
  */
 const Gameboard = (() => {
-    let _board = new Array(9);
-    
-    // method of getting specific Cell that UI will render
-    const getCell = (num) => _board[num];
+  // Private variable to hold the game board state
+  let _board = new Array(9);
 
-    /**
-     * change cell's value to players symbol
-     * @param num - number of Cell in the array from 0 to 8 starting from top left
-     * @param player - the player that changes the cell
-     */
-    const setSymbol = (num, player) => {
-      _board[num] = player.getSign();  
-    }
+  // Public method to get a specific cell's value
+  const getCell = (num) => _board[num];
 
-    /**
-     * clearing the gameboard
-     */
-    const clear = () => {
-      for (let i = 0; i < _board.length; i++) {
-        _board[i] = undefined;
-      }
-    }
+  // Public method to set a symbol in a specific cell
+  const setSymbol = (num, player) => {
+      _board[num] = player.getSign();
+  };
 
-    /**
-     * Prints the gameboard in the console
-     */
-    const getBoard = () => {
+  // Public method to clear the game board
+  const clear = () => {
+      _board.fill(undefined);
+  };
+
+  // Public method to print the game board to the console
+  const getBoard = () => {
       let displayBoard = '';
       for (let i = 0; i < _board.length; i++) {
           displayBoard += _board[i] ? _board[i] : '_'; // Show symbol or underscore if empty
-          if ((i + 1) % 3 === 0) displayBoard += '\n'; // Add newline after every 3 cells
-          else displayBoard += ' '; // Add space between symbols
+          displayBoard += (i + 1) % 3 === 0 ? '\n' : ' '; // Add newline every 3 cells
       }
       console.log(displayBoard);
-    };
+  };
 
-    return{
+  return {
       getCell,
       setSymbol,
       clear,
       getBoard
-    };
+  };
 })();
-
 /**
-* This factory sets the logic behind creating and handling players
-*/
+ * Factory function to create player objects
+ */
 const Player = (sign) => {
   let _sign = sign;
-  const getSign = () => _sign;
-  const setSign = (sign, active) => {
-    _sign = sign;
-    // DOM interaction for setting a Sign will come later on
-    // const p = document.querySelector(`.btn-p.${sign.toLowerCase()}`);
-    // if(active){
-    //    p.classList.add('selected');
-    //    p.classList.remove('not-selected');
-    // } else {
-    //    p.classList.remove('selected');
-    //    p.classList.add('not-selected');
-    // }
-  }
 
-  return{
-    getSign,
-    setSign
+  // Public method to get player's sign
+  const getSign = () => _sign;
+
+  // Public method to set player's sign
+  const setSign = (sign, active) => {
+      _sign = sign;
+      // Future implementation for DOM interaction
   };
-}
+
+  return {
+      getSign,
+      setSign
+  };
+};
 
 /**
-* This module controls the game
-*/
-const gameController =(() => {
+ * Module to control the game logic
+ */
+const gameController = (() => {
+  // Initialize players
   const _player1 = Player('X');
   const _player2 = Player('O');
 
+  // Methods to access players
   const getPlayer1 = () => _player1;
   const getPlayer2 = () => _player2;
 
-  /**
-  * Check if player has filled a row
-  * If someone filled a row it returns true, else it returns false
-  * @param {Gameboard} board - call to gameboard 
-  */
+  // Private method to check for a win by rows
   const _checkForRows = (board) => {
-    for (let i = 0; i < 3; i++) {
-      let row = []
-      for (let j = i * 3; j < i * 3 + 3; j++) {
-          row.push(board.getCell(j));
+      for (let i = 0; i < 3; i++) {
+          const row = [board.getCell(i * 3), board.getCell(i * 3 + 1), board.getCell(i * 3 + 2)];
+          if (row.every(cell => cell === 'X') || row.every(cell => cell === 'O')) return true;
       }
+      return false;
+  };
 
-      if (row.every(cell => cell == 'X') || row.every(cell => cell == 'O')) {
-          return true;
-      }
+ // Private method to check for a win by columns
+ const _checkForColumns = (board) => {
+    for (let i = 0; i < 3; i++) {
+        const column = [board.getCell(i), board.getCell(i + 3), board.getCell(i + 6)];
+        if (column.every(cell => cell === 'X') || column.every(cell => cell === 'O')) return true;
     }
     return false;
-  }
+ };
 
-  /**
-   * Check if player has filles a column
-   * If someone filled a column it returns true, else it returns false
-   * @param {Gameboard} board - call to gameboard
-   */
-  const _checkForColumns = (board) => {
-    for (let i = 0; i < 3; i++) {
-      let column = []
-      for (let j = 0; j < 3; j++) {
-          column.push(board.getCell(i + 3 * j));
-      }
+  // Private method to check for a win by diagonals
+  const _checkForDiagonals = (board) => {
+    const diagonal1 = [board.getCell(0), board.getCell(4), board.getCell(8)];
+    const diagonal2 = [board.getCell(6), board.getCell(4), board.getCell(2)];
+    return (diagonal1.every(cell => cell === 'X') || diagonal1.every(cell => cell === 'O') ||
+        diagonal2.every(cell => cell === 'X') || diagonal2.every(cell => cell === 'O'));
+  };
 
-      if (column.every(cell => cell == 'X') || column.every(cell => cell == 'O')) {
-          return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-  * Check if player has filles a column
-  * If someone filled a column it returns true, else it returns false
-  * @param {Gameboard} board - call to gameboard
-  */
- const _checkForDiagonals = (board) => {
-    diagonal1 = [board.getCell(0), board.getCell(4), board.getCell(8)];
-    diagonal2 = [board.getCell(6), board.getCell(4), board.getCell(2)];
-    if (diagonal1.every(cell => cell == 'X') || diagonal1.every(cell => cell == 'O')) {
-      return true;
-    }
-    else if (diagonal2.every(cell => cell == 'X') || diagonal2.every(cell => cell == 'O')) {
-      return true;
-    }
-  }
-
-  /**
-  * Checks if the game is a win.
-  * If its a win it returns true, else it returns false.
-  * @param {Gameboard} board 
-  */
+  // Public method to check for a win
   const checkForWin = (board) => {
-    if(_checkForRows(board) || _checkForColumns(board) || _checkForDiagonals(board)){
-      return true;
-    }
-    return false;
-  }
+    return _checkForRows(board) || _checkForColumns(board) || _checkForDiagonals(board);
+  };
 
-  /**
-  * Checks if the game is a draw.
-  * If its a draw it returns true, else it returns false.
-  * @param {Gameboard} board 
-  */
+  // Public method to check for a draw
   const checkForDraw = (board) => {
-    if (checkForWin(board)) {
-        return false;
-    }
+    // First check if there is a winner
+    if (checkForWin(board)) return false;
+
+    // Check if all cells are filled
     for (let i = 0; i < 9; i++) {
-        const cell = board.getCell(i);
-        if (cell == undefined) {
-            return false;
+        if (board.getCell(i) === undefined) {
+            return false; // Return false if any cell is still empty
         }
     }
-    return true;
-  }
+    return true; // Return true if all cells are filled and no winner
+};
 
-  /**
-   * Changes sign of player 1 to 'sign' and the other players to the other sign
-   * @param {string} sign - 'X' or 'O'
-   */
+
+  /// Public method to change players' signs
   const changeSign = (sign) => {
-    if (sign == 'X') {
-      _player1.setSign('X', true);
-      _player2.setSign('O');
-    } else if (sign == 'O'){
-      _player1.setSign('O', true);
-      _player2.setSign('X');
-    }
-  }
+    _player1.setSign(sign, true);
+    _player2.setSign(sign === 'X' ? 'O' : 'X');
+  };
 
   return {
     getPlayer1,
@@ -188,199 +129,139 @@ const gameController =(() => {
   }
 })();
 
-const displayController =(() => {
-  const gameboardElement = document.querySelector('.gameboard'); // Select the gameboard container
-  const restartButton = document.getElementById('restart-button'); // Select the "Restart" button
-  const changePlayersButton = document.getElementById('change-players-button'); // Select the "Change players" button
-  const startDialog = document.getElementById('start-dialog'); // Select the dialog element
-  const cancelButton = document.querySelector('#cancel-button'); // Select dialog cancel button
-  const formElement = document.querySelector('#form-names'); // Select submit button in form element
-  const gameTitle = document.querySelector('.game-title'); // Select updating game header
-  const player1Title = document.querySelector('.player1'); // Select player 1 title
-  const player2Title = document.querySelector('.player2'); // Select player 2 title
+/**
+ * Module to control the display and interaction with the UI
+ */
+const displayController = (() => {
+  // DOM elements
+  const gameboardElement = document.querySelector('.gameboard');
+  const restartButton = document.getElementById('restart-button');
+  const changePlayersButton = document.getElementById('change-players-button');
+  const startDialog = document.getElementById('start-dialog');
+  const cancelButton = document.querySelector('#cancel-button');
+  const formElement = document.querySelector('#form-names');
+  const player1Title = document.querySelector('.player1');
+  const player2Title = document.querySelector('.player2');
   const winnerDisplay = document.getElementById('winner-display');
-  const board = document.querySelector('.gameboard');
   const nextRoundButton = document.getElementById('next-round-button');
-
   let currentPlayer = gameController.getPlayer1();
-  let player1Name = 'Player 1'; // Default player names
-  let player2Name = 'Player 2';
 
+  // Private method to display winner message
   const displayWinner = (winner) => {
-    winnerDisplay.classList.remove('hidden');
-    winnerDisplay.textContent = `Winner: ${winner}`;
-    board.classList.add('blurred');
-    board.classList.add('disabled'); // Disable pointer events
-    nextRoundButton.classList.remove('hidden');
+      winnerDisplay.classList.remove('hidden');
+      winnerDisplay.textContent = `Winner: ${winner}`;
+      gameboardElement.classList.add('blurred', 'disabled');
+      nextRoundButton.classList.remove('hidden');
   };
 
+  // Private method to display draw message
   const displayDraw = () => {
-    winnerDisplay.textContent = "It's a draw!";
-    winnerDisplay.classList.remove('hidden');
-    board.classList.add('blurred');
-    nextRoundButton.classList.remove('hidden');
+      winnerDisplay.textContent = "It's a draw!";
+      winnerDisplay.classList.remove('hidden');
+      gameboardElement.classList.add('blurred');
+      nextRoundButton.classList.remove('hidden');
   };
 
-  /**
-    * Handle button clicks for "Restart" and "Change players" and dialog button "Cancel"
-    */
+  // Event handler for buttons
   const _handleButtonClick = (event) => {
-    if (event.target === restartButton) {
-        // Handle "Restart" button click
-        Gameboard.clear(); // Clear the gameboard array
-        renderBoard(Gameboard); // Re-render the gameboard visually
-        // reset win counters
-        document.getElementById('x-win-counter').textContent = '0'; 
-        document.getElementById('o-win-counter').textContent = '0';
-    } else if (event.target === changePlayersButton) {
-        // Handle "Change players" button click
-        startDialog.showModal(); // Show the dialog for changing players
-    } else if (event.target === cancelButton) {
-        // Handle "Cancel" button click
-        startDialog.close(); // Close the dialog for changing players
-    }
+      if (event.target === restartButton) {
+          Gameboard.clear();
+          renderBoard(Gameboard);
+          document.getElementById('x-win-counter').textContent = '0';
+          document.getElementById('o-win-counter').textContent = '0';
+      } else if (event.target === changePlayersButton) {
+          startDialog.showModal();
+      } else if (event.target === cancelButton) {
+          startDialog.close();
+      }
   };
 
-  const _handleSubmit = (event) =>{
-    event.preventDefault(); // Prevent default form submission
-
-    //Retrieve form values
-    const p1Name = document.getElementById('player1').value || player1Name;
-    const p2Name = document.getElementById('player2').value || player2Name;
-
-    //Update game header with player names
-    updateGameTitle(p1Name, p2Name);
-
-    Gameboard.clear(); // clear gameboard array
-    renderBoard(Gameboard); // Re-render the gameboard visually
-
-    startDialog.close();
+  // Event handler for form submission
+  const _handleSubmit = (event) => {
+      event.preventDefault();
+      const p1Name = document.getElementById('player1').value || 'Player 1';
+      const p2Name = document.getElementById('player2').value || 'Player 2';
+      updateGameTitle(p1Name, p2Name);
+      Gameboard.clear();
+      renderBoard(Gameboard);
+      startDialog.close();
   };
 
-  // Add event listeners for buttons
+  // Add event listeners for buttons and form submission
   restartButton.addEventListener('click', _handleButtonClick);
   changePlayersButton.addEventListener('click', _handleButtonClick);
   cancelButton.addEventListener('click', _handleButtonClick);
   formElement.addEventListener('submit', _handleSubmit);
 
-  /**
-   * Update the game header to display player names
-   */
+  // Method to update the game title with player names
   const updateGameTitle = (name1, name2) => {
-    player1Title.textContent = name1; // Set player 1 name
-    player2Title.textContent = name2; // Set player 2 name
+      player1Title.textContent = name1;
+      player2Title.textContent = name2;
   };
 
-  /**
-   * Render the gameboard to the webpage
-   */
+  // Method to render the game board on the webpage
   const renderBoard = (board) => {
-    const gameboardElement = document.querySelector('.gameboard');
-    gameboardElement.innerHTML = '';// Clear the previous board
+      gameboardElement.innerHTML = ''; // Clear previous board
 
-    // Re-add the winner-display div
-    const winnerDisplay = document.createElement('div');
-    winnerDisplay.id = 'winner-display';
-    winnerDisplay.classList.add('hidden');
-    gameboardElement.appendChild(winnerDisplay);
+      // Re-add the winner-display div
+      const winnerDisplay = document.createElement('div');
+      winnerDisplay.id = 'winner-display';
+      winnerDisplay.classList.add('hidden');
+      gameboardElement.appendChild(winnerDisplay);
 
-
-    // Iterate through the gameboard array and create cells
-    for (let i = 0; i < 9; i++) {
-        const cell = document.createElement('div'); // Create a new div for each cell
-        cell.classList.add('cell'); // Add the 'cell' class for styling
-        cell.textContent = board.getCell(i) ? board.getCell(i) : ''; // Display 'X', 'O', or empty
-        cell.dataset.index = i;
-
-        // Add click event listener for each cell
-        cell.addEventListener('click', () => _handleCellClick(i, board));
-        gameboardElement.appendChild(cell); // Append each cell to the gameboard container
-    }
+      // Create cells for the game board
+      for (let i = 0; i < 9; i++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.textContent = board.getCell(i) ? board.getCell(i) : '';
+          cell.dataset.index = i;
+          cell.addEventListener('click', () => _handleCellClick(i, board));
+          gameboardElement.appendChild(cell);
+      }
   };
 
-  
-
+  // Method to start the next round
   const startNextRound = () => {
-    winnerDisplay.textContent = '';
-    winnerDisplay.classList.add('hidden');
-    board.classList.remove('blurred');
-    board.classList.remove('disabled'); // Enable pointer events
-    nextRoundButton.classList.add('hidden');
-    Gameboard.clear(); // Clear the board after a win
-    renderBoard(Gameboard); // Re-render the cleared board
-    currentPlayer = gameController.getPlayer1(); // Reset the current player to player 1
+      winnerDisplay.textContent = '';
+      winnerDisplay.classList.add('hidden');
+      gameboardElement.classList.remove('blurred', 'disabled');
+      nextRoundButton.classList.add('hidden');
+      Gameboard.clear();
+      renderBoard(Gameboard);
+      currentPlayer = gameController.getPlayer1();
   };
 
+  // Add event listener for the next round button
   nextRoundButton.addEventListener('click', startNextRound);
 
-  /**
-   * Handle click events on the cells
-   * @param {number} index - The index of the cell clicked
-   * @param {object} board - The Gameboard object
-   */
+  // Method to handle cell click events
   const _handleCellClick = (index, board) => {
-    // If the cell is already occupied, do nothing
-    if (board.getCell(index)) {
-      return;
-    }
-
-    // Set players symbol on clicked cell
-    board.setSymbol(index, currentPlayer);
-
-    // Add class to the cell based on the current player's symbol
-    const cellElement = document.querySelector(`.cell[data-index="${index}"]`);
-    if (currentPlayer === gameController.getPlayer1()) {
-      cellElement.classList.add('player-x');
-    } else {
-      cellElement.classList.add('player-o');
-    }
-
-    // Update the cell's text content
-    cellElement.textContent = currentPlayer.getSign();
-
-    // Render the updated board
-    // renderBoard(board);
-
-    // Check for win or draw
-    if(gameController.checkForWin(board)) {
-      setTimeout(() => {
-        // Update the win counter
-        const playerSign = currentPlayer.getSign().toLowerCase();
-        const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
-        let winCount = parseInt(winCounterDiv.textContent, 10);
-        winCounterDiv.textContent = ++winCount;
-        displayWinner(currentPlayer.getSign());
-        //board.clear(); // Clear the board after a win
-        //renderBoard(board); // Re-render the cleared board
-      }, 100);
-      return;
-    }
-    if (gameController.checkForDraw(board)) {
-      setTimeout(() => {
-        //alert("It's a draw!");
-        //board.clear(); // Clear the board after a draw
-        //renderBoard(board); // Re-render the cleared board
-        displayDraw();
-      }, 100);
-      return;
-    }
-    /**
-   * Switch the current player
-   */
-    currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
-  };
-
-  const showStartDialog = () => {
-    startDialog.showModal();
+      if (board.getCell(index)) return; // Do nothing if cell is occupied
+      board.setSymbol(index, currentPlayer);
+      document.querySelector(`.cell[data-index="${index}"]`).textContent = currentPlayer.getSign();
+      if (gameController.checkForWin(board)) {
+          setTimeout(() => {
+              const playerSign = currentPlayer.getSign().toLowerCase();
+              const winCounterDiv = document.getElementById(`${playerSign}-win-counter`);
+              winCounterDiv.textContent = parseInt(winCounterDiv.textContent) + 1;
+              displayWinner(currentPlayer.getSign());
+          }, 100);
+          return;
+      }
+      if (gameController.checkForDraw(board)) {
+          setTimeout(displayDraw, 100);
+          return;
+      }
+      // Switch current player
+      currentPlayer = currentPlayer === gameController.getPlayer1() ? gameController.getPlayer2() : gameController.getPlayer1();
   };
 
   return {
-    displayWinner,
-    displayDraw,
-    renderBoard,
-    updateGameTitle,
-    showStartDialog,
-  }
+      displayWinner,
+      displayDraw,
+      renderBoard,
+      updateGameTitle
+  };
 })();
 
 // Initialize the game by rendering the initial empty board
