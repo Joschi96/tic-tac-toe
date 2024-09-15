@@ -148,10 +148,11 @@ const displayController = (() => {
 
   // Private method to display winner message
   const displayWinner = (winner) => {
-      winnerDisplay.classList.remove('hidden');
-      winnerDisplay.textContent = `Winner: ${winner}`;
-      gameboardElement.classList.add('blurred', 'disabled');
-      nextRoundButton.classList.remove('hidden');
+    const winnerDisplay = document.getElementById('winner-display');
+    winnerDisplay.textContent = `Winner: ${winner}`;
+    winnerDisplay.classList.remove('hidden');
+    gameboardElement.classList.add('blurred', 'disabled');
+    nextRoundButton.classList.remove('hidden');
   };
 
   // Private method to display draw message
