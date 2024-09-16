@@ -350,34 +350,41 @@ a {
     filter: blur(5px);
 }
 
-#winner-display {
+.winner-container{
     position: absolute;
+    width: 30%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 2em;
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: Add a background color */
+    background-color: rgba(255, 255, 255, 0.616); /* Optional: Add a background color */
     padding: 10px;
     border-radius: 5px;
     text-align: center;
     z-index: 10; /* Ensure it sits on top of other elements */
     display: none;
+    color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
 }
-/* Ensure it's displayed when not hidden */
-#winner-display:not(.hidden) {
-    display: block;
-}
-  
+
 #next-round-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2em;
+    padding: 0.5rem 1rem;
+    font-size: 3rem;
+    font-weight: 900;
     border: none;
-    background: none;
+    border-radius: 5px;
     cursor: pointer;
-    z-index: 10; /* Ensure it sits on top of other elements */
+    background-color: rgba(255, 255, 255, 0);
+    color: var(--primary-color);
+}
+#next-round-button:hover {
+    filter: drop-shadow(0 0 10px var(--quinary-color));
+    color: var(--quinary-color);
+}
+
+/* Ensure it's displayed when not hidden */
+.winner-container:not(.hidden) {
+    display: block;
 }
   
 .hidden {

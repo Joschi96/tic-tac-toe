@@ -70,12 +70,15 @@
                 </div>
             </div>
             <div class="gameboard">
-                <div id="winner-display" class="hidden"></div>
+                
                 <!-- Cells will be dynamically created and filled by JavaScript -->
             </div>
-            <button id="next-round-button" class="hidden">
-                &#x21bb; <!-- Circled arrow symbol -->
-            </button>
+            <div class="winner-container hidden">
+                <div id="winner-display"></div>
+                <button id="next-round-button">
+                    &#x21bb; <!-- Circled arrow symbol -->
+                </button>
+            </div>
             <div class="buttons">
                 <button type="button" id="restart-button">Restart</button>
                 <button type="button" id="change-players-button">Change players</button>

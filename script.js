@@ -144,22 +144,29 @@ const displayController = (() => {
   const player2Title = document.querySelector('.player2');
   const winnerDisplay = document.getElementById('winner-display');
   const nextRoundButton = document.getElementById('next-round-button');
+  const winnerContainer = document.querySelector('.winner-container');
   let currentPlayer = gameController.getPlayer1();
+
+  // Method to show the modal dialog
+    const showModal = () => {
+        startDialog.showModal();
+    };
 
   // Private method to display winner message
   const displayWinner = (winner) => {
-    const winnerDisplay = document.getElementById('winner-display');
-    winnerDisplay.textContent = `Winner: ${winner}`;
-    winnerDisplay.classList.remove('hidden');
+    //const winnerDisplay = document.getElementById('winner-display');
+    winnerDisplay.textContent = `${winner} wins!`;
     gameboardElement.classList.add('blurred', 'disabled');
-    nextRoundButton.classList.remove('hidden');
+    winnerContainer.classList.remove('hidden');
+    //winnerDisplay.classList.remove('hidden');
+    //nextRoundButton.classList.remove('hidden');
   };
 
   // Private method to display draw message
   const displayDraw = () => {
       winnerDisplay.textContent = "It's a draw!";
-      winnerDisplay.classList.remove('hidden');
       gameboardElement.classList.add('blurred');
+      winnerContainer.classList.remove('hidden');
       nextRoundButton.classList.remove('hidden');
   };
 
@@ -174,6 +181,8 @@ const displayController = (() => {
           startDialog.showModal();
       } else if (event.target === cancelButton) {
           startDialog.close();
+      } else if (event.target === nextRoundButton) {
+          startNextRound();
       }
   };
 
@@ -193,6 +202,8 @@ const displayController = (() => {
   changePlayersButton.addEventListener('click', _handleButtonClick);
   cancelButton.addEventListener('click', _handleButtonClick);
   formElement.addEventListener('submit', _handleSubmit);
+  nextRoundButton.addEventListener('click', _handleButtonClick);
+
 
   // Method to update the game title with player names
   const updateGameTitle = (name1, name2) => {
@@ -204,11 +215,11 @@ const displayController = (() => {
   const renderBoard = (board) => {
       gameboardElement.innerHTML = ''; // Clear previous board
 
-      // Re-add the winner-display div
-      const winnerDisplay = document.createElement('div');
-      winnerDisplay.id = 'winner-display';
-      winnerDisplay.classList.add('hidden');
-      gameboardElement.appendChild(winnerDisplay);
+    //   // Re-add the winner-display div
+    //   const winnerDisplay = document.createElement('div');
+    //   winnerDisplay.id = 'winner-display';
+    //   winnerDisplay.classList.add('hidden');
+    //   winnerContainer.appendChild(winnerDisplay);
 
       // Create cells for the game board
       for (let i = 0; i < 9; i++) {
@@ -224,16 +235,12 @@ const displayController = (() => {
   // Method to start the next round
   const startNextRound = () => {
       winnerDisplay.textContent = '';
-      winnerDisplay.classList.add('hidden');
+      winnerContainer.classList.add('hidden');
       gameboardElement.classList.remove('blurred', 'disabled');
-      nextRoundButton.classList.add('hidden');
       Gameboard.clear();
       renderBoard(Gameboard);
       currentPlayer = gameController.getPlayer1();
   };
-
-  // Add event listener for the next round button
-  nextRoundButton.addEventListener('click', startNextRound);
 
   const _handleCellClick = (index, board) => {
         // If the cell is already occupied, do nothing
@@ -277,7 +284,8 @@ const displayController = (() => {
       displayWinner,
       displayDraw,
       renderBoard,
-      updateGameTitle
+      updateGameTitle,
+      showModal
   };
 })();
 
@@ -288,5 +296,5 @@ document.addEventListener('DOMContentLoaded', () => {
   displayController.updateGameTitle('Player 1', 'Player 2'); // Render automatically updating header
 
   // Show dialog on page load
-  //displayController.showStartDialog();
+  displayController.showModal();
 });
